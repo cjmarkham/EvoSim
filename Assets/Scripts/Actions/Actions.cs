@@ -6,5 +6,6 @@ public enum Actions
     Drinking,
     Wandering,
     FindingFood,
-    FindingMate
+    FindingMate,
+    Mating
 }

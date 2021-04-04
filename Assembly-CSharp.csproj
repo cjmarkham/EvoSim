@@ -60,7 +60,12 @@
     <Compile Include="Assets/Scripts/Sheep.cs" />
     <Compile Include="Assets/Scripts/GameController.cs" />
     <Compile Include="Assets/Scripts/Movement.cs" />
-    <Compile Include="Assets/Scripts/Actions.cs" />
+    <Compile Include="Assets/Scripts/Genders.cs" />
+    <Compile Include="Assets/Scripts/Actions/Action.cs" />
+    <Compile Include="Assets/Scripts/Actions/MatingAction.cs" />
+    <Compile Include="Assets/Scripts/Actions/Actions.cs" />
+    <Compile Include="Assets/Scripts/Actions/EatingAction.cs" />
+    <Compile Include="Assets/Scripts/Actions/RestingAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

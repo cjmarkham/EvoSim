@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2618843391040615652}
-  m_LocalRotation: {x: 0.000000021855694, y: 0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 15.742624, y: 25.25205, z: 15.742624}
   m_Children: []
@@ -121,11 +121,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   action: 0
+  agent: {fileID: 0}
   hunger: 0
   tiredness: 0
   viewRadius: 3
   maxWanderDistance: 3
+  reproductiveUrge: 0
+  foundFood: 0
+  foundMate: 0
+  beingTargeted: 0
+  eligableToMate: 0
+  timeSinceLastMate: 0
   moveType: 0
+  gender: 0
+  isChild: 0
+  loveParticles: {fileID: 2827226796602455550, guid: 8fdb5eb4529f448fe8c42c75b49b420f, type: 3}
 --- !u!114 &2618843391040615646
 MonoBehaviour:
   m_ObjectHideFlags: 0
