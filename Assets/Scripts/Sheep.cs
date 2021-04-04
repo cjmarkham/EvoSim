@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class Sheep : MonoBehaviour
 {
-    private List<Transform> foodInRange;
     private Movement movement;
     public Actions action;
 
@@ -19,8 +18,11 @@ public class Sheep : MonoBehaviour
 
     private float lastActionTime = 0f;
 
+    private List<Transform> foodInRange;
     private bool foundFood = false;
     private Transform foodTarget;
+
+    private List<Transform> sheepInRange;
 
     // Random is used after resting, forward for everything else
     public Movements moveType = Movements.Forward;
@@ -30,12 +32,14 @@ public class Sheep : MonoBehaviour
         action = Actions.None;
         agent = GetComponent<NavMeshAgent>();
         foodInRange = new List<Transform>();
+        sheepInRange = new List<Transform>();
         movement = GetComponent<Movement>();
     }
 
     private void FixedUpdate()
     {
         GetFoodInRange();
+        GetSheepInRange();
     }
 
     private void Update()
@@ -192,6 +196,20 @@ public class Sheep : MonoBehaviour
         }
     }
 
+    void GetSheepInRange()
+    {
+        // Get rid of old food since this may not be in our range any more
+        sheepInRange.Clear();
+
+        LayerMask mask = LayerMask.GetMask("Sheep");
+        Collider[] collisions = Physics.OverlapSphere(transform.position, viewRadius, mask);
+
+        foreach (Collider c in collisions)
+        {
+            sheepInRange.Add(c.transform);
+        }
+    }
+
     private Transform GetClosestFood()
     {
         Transform closestFood = null;
@@ -232,6 +250,12 @@ public class Sheep : MonoBehaviour
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(transform.position, food.position);
+            }
+
+            foreach (Transform sheep in sheepInRange)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, sheep.position);
             }
         }
     }
