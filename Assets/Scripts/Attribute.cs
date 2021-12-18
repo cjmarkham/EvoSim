@@ -2,8 +2,13 @@
 
 // An attribute is something like hunger or thirst
 public class Attribute : ScriptableObject {
-    // Public for debugging purposes
-    public float Value;
+    private float value;
+
+    public float Value {
+        get {
+            return value;
+        }
+    }
 
     private readonly int DangerThreshold;
 
@@ -18,7 +23,7 @@ public class Attribute : ScriptableObject {
     public bool ThresholdReached = false;
 
     public Attribute(float startValue, float modifyAmount, int dangerThreshold) {
-        Value = startValue;
+        value = startValue;
         ModifyAmount = modifyAmount;
         DangerThreshold = dangerThreshold;
     }
@@ -34,7 +39,7 @@ public class Attribute : ScriptableObject {
         }
 
         Incrementing = true;
-        Value += Time.deltaTime * ModifyAmount;
+        value += Time.deltaTime * ModifyAmount;
     }
 
     public void Decrement() {
@@ -46,7 +51,7 @@ public class Attribute : ScriptableObject {
 
         Decrementing = true;
         // Decrement faster than increment so we don't drink or eat for ages
-        Value -= Time.deltaTime * (ModifyAmount * 10);
+        value -= Time.deltaTime * (ModifyAmount * 10);
 
         if (Value <= 0f) {
             ThresholdReached = false;
