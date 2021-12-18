@@ -22,10 +22,10 @@ public class GameController : MonoBehaviour {
     }
 
     public void SpawnSheep() {
-        float maxX = 6.5f;
-        float minX = -6.5f;
-        float maxZ = 6.5f;
-        float minZ = -6.5f;
+        float maxX = 30f;
+        float minX = 0f;
+        float maxZ = 11f;
+        float minZ = 0f;
 
         float randomX = Random.Range(minX, maxX);
         float randomZ = Random.Range(minZ, maxZ);
@@ -33,14 +33,14 @@ public class GameController : MonoBehaviour {
     }
 
     public void SpawnGrass() {
-        int maxX = 7;
-        int minX = -7;
-        int maxZ = 7;
-        int minZ = -7;
+        float maxX = 30f;
+        float minX = 0f;
+        float maxZ = 11f;
+        float minZ = 0f;
 
-        int randomX = Random.Range(minX, maxX);
-        int randomZ = Random.Range(minZ, maxZ);
+        float randomX = Random.Range(minX, maxX);
+        float randomZ = Random.Range(minZ, maxZ);
 
-        Instantiate(Grass, new Vector3(randomX, 0, randomZ), Quaternion.Euler(-90, 0, 0));
+        Instantiate(Grass, new Vector3(randomX, 0.87f, randomZ), Quaternion.Euler(0, 0, 0));
     }
 }
