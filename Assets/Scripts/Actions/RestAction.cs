@@ -1,29 +1,24 @@
-﻿using UnityEngine;
-
-public class RestAction : Action {
+﻿public class RestAction : Action {
     public override int Priority => 30;
 
     public override Actions Type => Actions.Resting;
 
-    private Sheep sheep;
+    private Sheep Sheep;
 
     public RestAction() {
-        Debug.Log("[NEW ACTION] Rest");
     }
 
     public override void OnStart(Sheep sheep) {
-        Debug.Log("[ACTION START] Resting");
-        this.sheep = sheep;
-        this.sheep.agent.ResetPath();
+        Sheep = sheep;
+        Sheep.Agent.ResetPath();
     }
 
     public override void OnUpdate() {
-        if (!sheep.agent.pathPending && sheep.agent.remainingDistance <= 0.1f) {
-            sheep.Tiredness -= Time.deltaTime * 0.1f;
+        if (!Sheep.Agent.pathPending && Sheep.Agent.remainingDistance <= 0.1f) {
+            Sheep.Tiredness.Decrement();
 
-            if (sheep.Tiredness <= 0f) {
-                sheep.Tiredness = 0f;
-                sheep.OnActionEnd();
+            if (!Sheep.Tiredness.ThresholdReached) {
+                Sheep.OnActionEnd();
             }
         }
     }

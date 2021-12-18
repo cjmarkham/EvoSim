@@ -4,49 +4,52 @@ using UnityEngine.AI;
 
 public class Sheep : MonoBehaviour {
     [HideInInspector]
-    public Movement movement;
-    public Vector3 destination;
-
-    // This needs to be public for other sheep scripts to use
+    public Movement Movement;
     [HideInInspector]
-    public NavMeshAgent agent;
+    public Vector3 Destination;
+    [HideInInspector]
+    public NavMeshAgent Agent;
+    [HideInInspector]
+    public Queue ActionQueue;
 
     [Header("Attributes")]
-    public float Hunger = 0f;
+    public Attribute Hunger;
+    public Attribute Thirst;
+    public Attribute Tiredness;
     private float HungerAdditionPerFrame = 0.01f;
+    private float ThirstAdditionPerFrame = 0.02f;
+    private float TirednessAdditionPerFrame = 0.005f;
+    private int MaxHungerTolerence = 1; // The max amount of hunger before dying
+    private int MaxThirstTolerence = 1; // The max amount of thirst before dying
+    private int MaxTirednessTolerence = 1; // The max amount of thirst before dying
+
     public int ViewRadius = 10;
-    public int maxWanderDistance = 10;
-    private float MaxHungerTolerence = 1f; // The max amount of hunger before dying
-    public float Tiredness = 0f;
-    private float TirednessAdditionPerFrame = 0.01f;
+    public int MaxWanderDistance = 10;
 
     [Header("Debug")]
     public bool FoundFood = false;
+    public bool FoundWater = false;
     public List<Transform> FoodInRange;
-
-    // Random is used after resting, forward for everything else
-    //public Movements moveType = Movements.Forward;
-    [Header("Queue")]
-    public Queue ActionQueue;
+    public List<Transform> DrinkingSpotsInRange;
 
     private void Start() {
-        agent = GetComponent<NavMeshAgent>();
+        Agent = GetComponent<NavMeshAgent>();
         FoodInRange = new List<Transform>();
-        movement = GetComponent<Movement>();
+        Movement = GetComponent<Movement>();
         ActionQueue = GetComponent<Queue>();
 
-        MaxHungerTolerence = Random.Range(0.8f, 1.2f);
-        ViewRadius = Random.Range(8, 12);
+        Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
+        Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
+        Tiredness = new Attribute(0f, TirednessAdditionPerFrame, MaxTirednessTolerence);
     }
 
     private void FixedUpdate() {
-        // If we have no actions in the queue, add a wander action.
-        // We only add wander here as when we get hungry or want to mate, those
+        // If we only have 1 action in the queue, add either a wander or graze action.
+        // We only add those here as when we get hungry or want to mate, those
         // methods will add to the queue.
-        if (ActionQueue.Empty()) {
+        if (ActionQueue.Length() < 2) {
             // Choose either to graze or wander randomly
             int rand = Random.Range(0, 2);
-            Debug.Log(rand);
             if (rand > 0) {
                 Action wanderingAction = ScriptableObject.CreateInstance<WanderingAction>();
                 ActionQueue.Add(wanderingAction);
@@ -56,27 +59,35 @@ public class Sheep : MonoBehaviour {
             }
         }
 
-        TrackHunger();
-        TrackTiredness();
+        // Always get the food in range so if we get hungry, we can head to the closest one straight away
         GetFoodInRange();
+        // Always get the water in range so if we get thirsty, we can head to the closest one straight away
+        GetDrinkingSpotsInRange();
 
+        // Process the actions in the queue and remove them 
         ProcessActionQueue();
+
+        TrackThresholds();
     }
 
-    private bool CanEat() {
-        if (ActionQueue.CurrentAction == null) {
-            return true;
+    // Track if we're thirsty, hungry etc and perform actions if needed
+    private void TrackThresholds() {
+        if (Thirst.ThresholdReached) {
+            // Only set the drinking action if we don't have an action or we do and
+            // the action isn't drinking
+            if (CanDrink()) {
+                // Check if this item is already in the queue. This is more to prevent
+                // it adding multiple since this is ran in a FixedUpdate
+                if (!ActionQueue.HasItem(Actions.Drinking)) {
+                    // Add this action to the queue
+                    Action drinkAction = ScriptableObject.CreateInstance<DrinkingAction>();
+                    ActionQueue.Add(drinkAction);
+                    Debug.Log("ADDING DRINK ACTION");
+                }
+            }
         }
 
-        if (ActionQueue.CurrentAction.Type != Actions.Eating) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void TrackHunger() {
-        if (Hunger >= 0.8f) {
+        if (Hunger.ThresholdReached) {
             // Only set the eating action if we don't have an action or we do and
             // the action isn't eating
             if (CanEat()) {
@@ -89,15 +100,29 @@ public class Sheep : MonoBehaviour {
                 }
             }
         }
-    }
 
-    private void TrackTiredness() {
-        if (Tiredness >= 1f) {
+        if (Tiredness.ThresholdReached) {
             if (!ActionQueue.HasItem(Actions.Resting)) {
                 Action restAction = ScriptableObject.CreateInstance<RestAction>();
                 ActionQueue.Add(restAction);
             }
         }
+    }
+
+    private bool CanEat() {
+        if (ActionQueue.CurrentAction == null) {
+            return true;
+        }
+
+        return ActionQueue.CurrentAction.Type != Actions.Eating;
+    }
+
+    private bool CanDrink() {
+        if (ActionQueue.CurrentAction == null) {
+            return true;
+        }
+
+        return ActionQueue.CurrentAction.Type != Actions.Drinking;
     }
 
     private void ProcessActionQueue() {
@@ -127,38 +152,19 @@ public class Sheep : MonoBehaviour {
             ActionQueue.CurrentAction.OnUpdate();
         }
 
-        UpdateAttributes();
-
-        if (Hunger >= MaxHungerTolerence) {
-            Die();
+        if (!FoundFood) {
+            Hunger.Increment();
+        }
+        if (!FoundWater) {
+            Thirst.Increment();
+        }
+        if (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type == Actions.Resting) {
+            Tiredness.Increment();
         }
     }
 
     public void OnActionEnd() {
         ActionQueue.ResetCurrent();
-    }
-
-
-    private void UpdateAttributes() {
-        UpdateHunger();
-        UpdateTiredness();
-    }
-
-    private void UpdateHunger() {
-        // We could check for the currentAction == Actions.Eating but that action is a bit
-        // misleading because the animal doesn't actually eat until it finds food.
-        if (!FoundFood) {
-            Hunger += Time.deltaTime * HungerAdditionPerFrame;
-        }
-    }
-
-    private void UpdateTiredness() {
-        // Don't update if we're resting
-        if (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type == Actions.Resting) {
-            return;
-        }
-
-        Tiredness += Time.deltaTime * TirednessAdditionPerFrame;
     }
 
     void GetFoodInRange() {
@@ -167,9 +173,22 @@ public class Sheep : MonoBehaviour {
 
         LayerMask mask = LayerMask.GetMask("Food");
         Collider[] collisions = Physics.OverlapSphere(transform.position, ViewRadius, mask);
+        Debug.Log(collisions.Length);
 
         foreach (Collider c in collisions) {
             FoodInRange.Add(c.transform);
+        }
+    }
+
+    void GetDrinkingSpotsInRange() {
+        // Get rid of old spots since this may not be in our range any more
+        DrinkingSpotsInRange.Clear();
+
+        LayerMask mask = LayerMask.GetMask("DrinkSpot");
+        Collider[] collisions = Physics.OverlapSphere(transform.position, ViewRadius, mask);
+
+        foreach (Collider c in collisions) {
+            DrinkingSpotsInRange.Add(c.transform);
         }
     }
 
@@ -198,16 +217,42 @@ public class Sheep : MonoBehaviour {
         return closestFood;
     }
 
+    public Transform GetClosestDrinkingSpot() {
+        Transform closestDrinkingSpot = null;
+        float closestDistanceSqr = Mathf.Infinity;
+
+        foreach (Transform spot in DrinkingSpotsInRange) {
+            Drinkable component = spot.GetComponent<Drinkable>();
+
+            // If this food is being targeted by another sheep, ignore it
+            if (component.Targeted) {
+                continue;
+            }
+
+            Vector3 directionToSpot = spot.position - transform.position;
+            float dSqrToTarget = directionToSpot.sqrMagnitude;
+
+            if (dSqrToTarget < closestDistanceSqr) {
+                closestDistanceSqr = dSqrToTarget;
+                closestDrinkingSpot = spot;
+                component.Targeted = true;
+            }
+        }
+
+        return closestDrinkingSpot;
+    }
+
     private void OnDrawGizmosSelected() {
         if (Application.isPlaying) {
             foreach (Transform food in FoodInRange) {
                 Gizmos.color = Color.red;
                 Gizmos.DrawLine(transform.position, food.position);
             }
-        }
-    }
 
-    private void Die() {
-        Destroy(gameObject);
+            foreach (Transform spot in DrinkingSpotsInRange) {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawLine(transform.position, spot.position);
+            }
+        }
     }
 }

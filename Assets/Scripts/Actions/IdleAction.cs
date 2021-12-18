@@ -5,7 +5,7 @@ public class IdleAction : Action {
 
     public override Actions Type => Actions.Idle;
 
-    private Sheep sheep;
+    private Sheep Sheep;
 
     // The amount of time we will be idle for
     private float IdleTimer;
@@ -14,8 +14,8 @@ public class IdleAction : Action {
     }
 
     public override void OnStart(Sheep sheep) {
-        this.sheep = sheep;
-        this.sheep.agent.ResetPath();
+        Sheep = sheep;
+        Sheep.Agent.ResetPath();
         IdleTimer = Random.Range(0.5f, 1.5f);
     }
 
@@ -23,7 +23,7 @@ public class IdleAction : Action {
         IdleTimer -= Time.deltaTime * 0.5f;
 
         if (IdleTimer <= 0f) {
-            this.sheep.OnActionEnd();
+            Sheep.OnActionEnd();
         }
     }
 

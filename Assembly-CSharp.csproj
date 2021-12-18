@@ -61,13 +61,16 @@
     <Compile Include="Assets/Scripts/Actions/Actions.cs" />
     <Compile Include="Assets/Scripts/GameController.cs" />
     <Compile Include="Assets/Scripts/Movement.cs" />
+    <Compile Include="Assets/Scripts/Attribute.cs" />
+    <Compile Include="Assets/Scripts/Actions/IdleAction.cs" />
+    <Compile Include="Assets/Scripts/UIController.cs" />
+    <Compile Include="Assets/Scripts/Actions/RestAction.cs" />
     <Compile Include="Assets/Scripts/Actions/Action.cs" />
     <Compile Include="Assets/Scripts/Actions/EatingAction.cs" />
+    <Compile Include="Assets/Scripts/Actions/DrinkingAction.cs" />
+    <Compile Include="Assets/Scripts/Drinkable.cs" />
     <Compile Include="Assets/Scripts/Sheep.cs" />
     <Compile Include="Assets/Scripts/Queue.cs" />
-    <Compile Include="Assets/Scripts/Actions/RestAction.cs" />
-    <Compile Include="Assets/Scripts/UIController.cs" />
-    <Compile Include="Assets/Scripts/Actions/IdleAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

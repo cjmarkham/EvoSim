@@ -2,14 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
-    public GameObject sheep;
-    public GameObject grass;
+    public GameObject Sheep;
+    public GameObject Grass;
     int totalSheep;
 
     Text sheepCountText;
     Text TimerText;
-
-    public Text EventText;
 
     private void Start() {
         sheepCountText = GameObject.Find("Sheep Count").GetComponent<Text>();
@@ -31,7 +29,7 @@ public class GameController : MonoBehaviour {
 
         float randomX = Random.Range(minX, maxX);
         float randomZ = Random.Range(minZ, maxZ);
-        Instantiate(sheep, new Vector3(randomX, 0, randomZ), Quaternion.Euler(0, 0, 0));
+        Instantiate(Sheep, new Vector3(randomX, 0, randomZ), Quaternion.Euler(0, 0, 0));
     }
 
     public void SpawnGrass() {
@@ -43,6 +41,6 @@ public class GameController : MonoBehaviour {
         int randomX = Random.Range(minX, maxX);
         int randomZ = Random.Range(minZ, maxZ);
 
-        Instantiate(grass, new Vector3(randomX, 0, randomZ), Quaternion.Euler(-90, 0, 0));
+        Instantiate(Grass, new Vector3(randomX, 0, randomZ), Quaternion.Euler(-90, 0, 0));
     }
 }

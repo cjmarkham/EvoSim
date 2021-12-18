@@ -6,10 +6,10 @@ public class Queue : MonoBehaviour {
 
     public Action CurrentAction;
 
-    private Sheep sheep;
+    private Sheep Sheep;
 
     public void Start() {
-        this.sheep = GetComponent<Sheep>();
+        Sheep = GetComponent<Sheep>();
         ActionQueue = new List<Action>();
     }
 
@@ -55,7 +55,7 @@ public class Queue : MonoBehaviour {
 
     public void StartNextAction() {
         CurrentAction = Pop();
-        CurrentAction.OnStart(sheep);
+        CurrentAction.OnStart(Sheep);
     }
 
     public void ResetCurrent() {
@@ -64,5 +64,9 @@ public class Queue : MonoBehaviour {
 
     public List<Action> All() {
         return ActionQueue;
+    }
+
+    public int Length() {
+        return ActionQueue.Count;
     }
 }

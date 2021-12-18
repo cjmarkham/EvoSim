@@ -5,53 +5,50 @@ public class EatingAction : Action {
 
     public override Actions Type => Actions.Eating;
 
-    private Sheep sheep;
+    private Sheep Sheep;
 
-    private Vector3 destination;
+    private Vector3 Destination;
 
-    private Transform closestFood;
+    private Transform ClosestFood;
 
     public EatingAction() {
-        Debug.Log("[NEW ACTION] Eat Food");
     }
 
     public override void OnStart(Sheep sheep) {
-        Debug.Log("[ACTION START] Eating");
-        this.sheep = sheep;
-        this.sheep.agent.ResetPath();
+        Sheep = sheep;
+        Sheep.Agent.ResetPath();
 
-        closestFood = sheep.GetClosestFood();
+        ClosestFood = sheep.GetClosestFood();
 
-        if (closestFood == null) {
-            sheep.movement.GetRandomDestination(sheep.maxWanderDistance, out destination);
+        if (ClosestFood == null) {
+            sheep.Movement.GetRandomDestination(sheep.MaxWanderDistance, out Destination);
         } else {
             sheep.FoundFood = true;
-            destination = closestFood.position;
+            Destination = ClosestFood.position;
         }
 
-        sheep.agent.SetDestination(destination);
+        sheep.Agent.SetDestination(Destination);
     }
 
     public override void OnUpdate() {
-        if (!sheep.agent.pathPending && sheep.agent.remainingDistance <= 0.1f) {
+        if (!Sheep.Agent.pathPending && Sheep.Agent.remainingDistance <= 0.1f) {
             // Happens when we delete the closest food but there's a couple more frames
             // where this is called.
-            if (!closestFood) {
-                sheep.OnActionEnd();
+            if (!ClosestFood) {
+                Sheep.OnActionEnd();
                 return;
             }
 
-            Eatable component = closestFood.GetComponent<Eatable>();
-            sheep.Hunger -= Time.deltaTime * component.Sustenance;
+            Eatable component = ClosestFood.GetComponent<Eatable>();
+            Sheep.Hunger.Decrement();
 
-            sheep.agent.ResetPath();
+            Sheep.Agent.ResetPath();
 
-            if (sheep.Hunger <= 0f) {
-                sheep.Hunger = 0f;
+            if (!Sheep.Hunger.ThresholdReached) {
                 component.Remove();
-                sheep.FoundFood = false;
-                closestFood = null;
-                sheep.OnActionEnd();
+                Sheep.FoundFood = false;
+                ClosestFood = null;
+                Sheep.OnActionEnd();
             }
         }
     }
