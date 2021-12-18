@@ -31,7 +31,9 @@ public class Sheep : MonoBehaviour {
     public bool FoundWater = false;
     public List<Transform> FoodInRange;
     public List<Transform> DrinkingSpotsInRange;
-    public float ThirstValue = 0f;
+
+    private ProgressBar hungerProgress;
+    private ProgressBar thirstProgress;
 
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
@@ -42,6 +44,11 @@ public class Sheep : MonoBehaviour {
         Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
         Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
         Tiredness = new Attribute(0f, TirednessAdditionPerFrame, MaxTirednessTolerence);
+
+        Transform stats = transform.Find("Stats");
+
+        hungerProgress = stats.Find("Hunger Bar").gameObject.GetComponentInChildren<ProgressBar>();
+        thirstProgress = stats.Find("Thirst Bar").gameObject.GetComponentInChildren<ProgressBar>();
     }
 
     private void FixedUpdate() {
@@ -73,8 +80,6 @@ public class Sheep : MonoBehaviour {
 
     // Track if we're thirsty, hungry etc and perform actions if needed
     private void TrackThresholds() {
-        ThirstValue = Thirst.Value;
-
         if (Thirst.ThresholdReached) {
             // Only set the drinking action if we don't have an action or we do and
             // the action isn't drinking
@@ -163,6 +168,10 @@ public class Sheep : MonoBehaviour {
         if (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type == Actions.Resting) {
             Tiredness.Increment();
         }
+
+        // UI
+        hungerProgress.current = Hunger.Value;
+        thirstProgress.current = Thirst.Value;
     }
 
     public void OnActionEnd() {

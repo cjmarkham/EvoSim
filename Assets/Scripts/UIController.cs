@@ -22,6 +22,8 @@ public class UIController : MonoBehaviour {
                     cakeslice.Outline outlineScript = hit.transform.gameObject.GetComponent<cakeslice.Outline>();
                     selectedSheep = hit.transform.gameObject.GetComponent<Sheep>();
                     outlineScript.eraseRenderer = false;
+
+                    selectedSheep.transform.Find("Stats").gameObject.SetActive(true);
                 } else {
                     EmptyQueueUI();
                     selectedSheep = null;
@@ -31,6 +33,8 @@ public class UIController : MonoBehaviour {
                     foreach (GameObject sheep in sheeps) {
                         cakeslice.Outline outlineScript = sheep.GetComponent<cakeslice.Outline>();
                         outlineScript.eraseRenderer = true;
+
+                        sheep.transform.Find("Stats").gameObject.SetActive(false);
                     }
                 }
             }

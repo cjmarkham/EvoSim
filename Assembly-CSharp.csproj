@@ -71,6 +71,7 @@
     <Compile Include="Assets/Scripts/Drinkable.cs" />
     <Compile Include="Assets/Scripts/Sheep.cs" />
     <Compile Include="Assets/Scripts/Queue.cs" />
+    <Compile Include="Assets/Scripts/ProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
