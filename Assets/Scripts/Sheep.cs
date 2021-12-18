@@ -31,6 +31,7 @@ public class Sheep : MonoBehaviour {
     public bool FoundWater = false;
     public List<Transform> FoodInRange;
     public List<Transform> DrinkingSpotsInRange;
+    public float ThirstValue = 0f;
 
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
@@ -72,6 +73,8 @@ public class Sheep : MonoBehaviour {
 
     // Track if we're thirsty, hungry etc and perform actions if needed
     private void TrackThresholds() {
+        ThirstValue = Thirst.Value;
+
         if (Thirst.ThresholdReached) {
             // Only set the drinking action if we don't have an action or we do and
             // the action isn't drinking
@@ -82,7 +85,6 @@ public class Sheep : MonoBehaviour {
                     // Add this action to the queue
                     Action drinkAction = ScriptableObject.CreateInstance<DrinkingAction>();
                     ActionQueue.Add(drinkAction);
-                    Debug.Log("ADDING DRINK ACTION");
                 }
             }
         }
@@ -173,7 +175,6 @@ public class Sheep : MonoBehaviour {
 
         LayerMask mask = LayerMask.GetMask("Food");
         Collider[] collisions = Physics.OverlapSphere(transform.position, ViewRadius, mask);
-        Debug.Log(collisions.Length);
 
         foreach (Collider c in collisions) {
             FoodInRange.Add(c.transform);
@@ -224,7 +225,7 @@ public class Sheep : MonoBehaviour {
         foreach (Transform spot in DrinkingSpotsInRange) {
             Drinkable component = spot.GetComponent<Drinkable>();
 
-            // If this food is being targeted by another sheep, ignore it
+            // If this water is being targeted by another sheep, ignore it
             if (component.Targeted) {
                 continue;
             }
