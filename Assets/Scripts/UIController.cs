@@ -4,13 +4,15 @@ using System.Collections.Generic;
 
 public class UIController : MonoBehaviour {
     private Sheep selectedSheep;
-    private RectTransform QueueListRect;
+    private RectTransform CurrentActionRect;
+    private RectTransform NextActionsRect;
 
     private void Start() {
-        QueueListRect = GameObject.Find("Queue List").GetComponent<RectTransform>();
+        CurrentActionRect = GameObject.Find("Current Action").GetComponent<RectTransform>();
+        NextActionsRect = GameObject.Find("Next Actions").GetComponent<RectTransform>();
     }
 
-    private void Update () {
+    private void FixedUpdate () {
         if (Input.GetMouseButtonDown(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -38,7 +40,11 @@ public class UIController : MonoBehaviour {
     }
 
     void EmptyQueueUI() {
-        foreach (Text existing in QueueListRect.GetComponentsInChildren<Text>()) {
+        foreach (Text existing in CurrentActionRect.GetComponentsInChildren<Text>()) {
+            Destroy(existing.gameObject);
+        }
+
+        foreach (Text existing in NextActionsRect.GetComponentsInChildren<Text>()) {
             Destroy(existing.gameObject);
         }
     }
@@ -50,16 +56,29 @@ public class UIController : MonoBehaviour {
 
         EmptyQueueUI();
 
+        // Add the first action to the current action queue
+        Action first = selectedSheep.ActionQueue.CurrentAction;
+        Text text = CreateTextForAction(first);
+        text.transform.SetParent(CurrentActionRect);
+
+        // Add the rest to the next action queue
         List<Action> queueActions = selectedSheep.ActionQueue.All();
 
-        foreach (Action action in queueActions) {
-            GameObject textGameObject = new GameObject();
-            Text t = textGameObject.AddComponent<Text>();
-            t.text = action.Type.ToString();
-            t.alignment = TextAnchor.MiddleRight;
-            t.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            t.fontSize = 14;
-            t.transform.SetParent(QueueListRect);
+        for (int i = 1; i < queueActions.Count; i++) {
+            Action action = queueActions[i];
+            Text t = CreateTextForAction(action);
+            t.transform.SetParent(NextActionsRect);
         }
+    }
+
+    Text CreateTextForAction(Action action) {
+        GameObject textGameObject = new GameObject();
+        Text t = textGameObject.AddComponent<Text>();
+        t.text = action.Type.ToString();
+        t.alignment = TextAnchor.MiddleRight;
+        t.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        t.fontSize = 14;
+
+        return t;
     }
 }
