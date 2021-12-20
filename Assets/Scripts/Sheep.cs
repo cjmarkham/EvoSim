@@ -190,7 +190,7 @@ public class Sheep : MonoBehaviour {
 
     private bool ShouldDie() {
         // TODO: These values are both 1
-        if (Hunger.DangerThresholdReached && Thirst.DangerThresholdReached) {
+        if (Hunger.DangerThresholdReached || Thirst.DangerThresholdReached) {
             return true;
         }
 
