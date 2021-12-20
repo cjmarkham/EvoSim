@@ -8074,5 +8074,6 @@ PrefabInstance:
       propertyPath: m_ChildForceExpandHeight
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4470318426785289862, guid: b48ff8f9649124514b189af606e01c12, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b48ff8f9649124514b189af606e01c12, type: 3}

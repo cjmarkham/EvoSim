@@ -9,7 +9,6 @@ public class Sheep : MonoBehaviour {
     public Vector3 Destination;
     [HideInInspector]
     public NavMeshAgent Agent;
-    [HideInInspector]
     public Queue ActionQueue;
     
 
@@ -44,7 +43,8 @@ public class Sheep : MonoBehaviour {
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
         Movement = GetComponent<Movement>();
-        ActionQueue = GetComponent<Queue>();
+
+        ActionQueue = new Queue(this);
 
         Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
         Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);

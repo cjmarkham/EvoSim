@@ -8,8 +8,8 @@ public class Queue : MonoBehaviour {
 
     private Sheep Sheep;
 
-    public void Start() {
-        Sheep = GetComponent<Sheep>();
+    public Queue(Sheep sheep) {
+        Sheep = sheep;
         ActionQueue = new List<Action>();
     }
 
