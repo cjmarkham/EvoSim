@@ -40,8 +40,8 @@ public class Sheep : MonoBehaviour {
         Movement = GetComponent<Movement>();
         ActionQueue = GetComponent<Queue>();
 
-        Hunger = new Attribute(0.4f, HungerAdditionPerFrame, MaxHungerTolerence);
-        Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
+        Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
+        Thirst = new Attribute(0.4f, ThirstAdditionPerFrame, MaxThirstTolerence);
 
         Transform stats = transform.Find("Stats");
         hungerProgress = stats.Find("Hunger Bar").gameObject.GetComponentInChildren<ProgressBar>();
@@ -78,10 +78,10 @@ public class Sheep : MonoBehaviour {
         if (Thirst.ShouldSatisfyAttribute() && !Drinking() && !FindingWater()) {
             // Check if this item is already in the queue. This is more to prevent
             // it adding multiple since this is ran in a FixedUpdate
-            if (!ActionQueue.HasItem(Actions.Drinking)) {
+            if (!ActionQueue.HasItem(Actions.FindingWater)) {
                 // Add this action to the queue
-                Action drinkAction = ScriptableObject.CreateInstance<Drinking>();
-                ActionQueue.Add(drinkAction);
+                Action findWaterAction = ScriptableObject.CreateInstance<FindingWater>();
+                ActionQueue.Add(findWaterAction);
             }
         }
 
@@ -114,17 +114,13 @@ public class Sheep : MonoBehaviour {
     
     private bool Drinking() {
         if (ActionQueue.CurrentAction == null) {
-            return true;
-        }
-
-        return ActionQueue.CurrentAction.Type != Actions.Drinking;
-    }
-
-    private bool FindingWater() {
-        if (FoundWater) {
             return false;
         }
 
+        return ActionQueue.CurrentAction.Type == Actions.Drinking;
+    }
+
+    private bool FindingWater() {
         if (ActionQueue.CurrentAction == null) {
             return false;
         }

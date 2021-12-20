@@ -17,13 +17,21 @@ public class FindingWater : Action {
     public override void OnStart(Sheep sheep) {
         Sheep = sheep;
 
+        ClosestWater = GetClosestWater();
+
         // If there's no water close, we have no choice to wander until we find some
         if (ClosestWater == null) {
             sheep.Movement.GetRandomDestination(sheep.MaxWanderDistance, out Destination);
         }
         else {
+            Debug.Log("Found water");
             sheep.FoundWater = true;
             Destination = ClosestWater.transform.position;
+
+            // We've found water so add drinking action which will be triggered
+            // once this action ends (we've reached the water)
+            Action drinkAction = new Drinking();
+            Sheep.ActionQueue.Add(drinkAction);
         }
 
         sheep.Agent.SetDestination(Destination);
@@ -36,7 +44,9 @@ public class FindingWater : Action {
     }
 
     public override void OnFixedUpdate() {
-        GetClosestWater();
+        if (ClosestWater == null) {
+            ClosestWater = GetClosestWater();
+        }
     }
 
     public override void OnEnd() {
@@ -45,35 +55,35 @@ public class FindingWater : Action {
             Debug.Log("Didn't find water, retrying");
             Action findWaterAction = CreateInstance<FindingWater>();
             Sheep.ActionQueue.Add(findWaterAction);
-        } else {
-            Debug.Log("Triggered Drinking");
-            // otherwise, drink the water
-
-            // TODO: Not using ScriptableObject.createInstance as I don't yet know
-            // how to pass an argument to that
-            Action drinkAction = new Drinking(ClosestWater);
-            Sheep.ActionQueue.Add(drinkAction);
         }
 
         Sheep.OnActionEnd();
     }
 
-    private void GetClosestWater() {
-        float closestDistanceSqr = Mathf.Infinity;
-
-        LayerMask mask = LayerMask.GetMask("Water");
+    // TODO: Sometimes this doesn't get the closest water
+    private GameObject GetClosestWater() {
+        LayerMask mask = LayerMask.GetMask("DrinkSpot");
         Collider[] collisions = Physics.OverlapSphere(Sheep.transform.position, Sheep.ViewRadius, mask);
+
+        // We didn't find any water
+        if (collisions.Length == 0) {
+            return null;
+        }
+
+        float closestDistance = Vector2.Distance(collisions[0].transform.position, Sheep.transform.position);
+        GameObject closestWater = collisions[0].gameObject;
 
         foreach (Collider c in collisions) {
             GameObject water = c.gameObject;
 
-            Vector3 directionToFood = water.transform.position - Sheep.transform.position;
-            float dSqrToTarget = directionToFood.sqrMagnitude;
+            float distance = Vector2.Distance(c.transform.position, Sheep.transform.position);
 
-            if (dSqrToTarget < closestDistanceSqr) {
-                closestDistanceSqr = dSqrToTarget;
-                ClosestWater = water;
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestWater = water;
             }
         }
+
+        return closestWater;
     }
 }

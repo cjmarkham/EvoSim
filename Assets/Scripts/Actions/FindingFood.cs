@@ -72,6 +72,11 @@ public class FindingFood : Action {
         LayerMask mask = LayerMask.GetMask("Food");
         Collider[] collisions = Physics.OverlapSphere(Sheep.transform.position, Sheep.ViewRadius, mask);
 
+        // We didn't find any food
+        if (collisions.Length == 0) {
+            return null;
+        }
+
         float closestDistance = Vector2.Distance(collisions[0].transform.position, Sheep.transform.position);
         GameObject closestFood = collisions[0].gameObject;
 

@@ -7,22 +7,12 @@ public class Drinking : Action {
 
     private Sheep Sheep;
 
-    private Vector3 Destination;
-
-    private GameObject ClosestWater;
-
-    public Drinking(GameObject closestWater) {
-        ClosestWater = closestWater;
+    public Drinking() {
     }
 
     public override void OnStart(Sheep sheep) {
         Sheep = sheep;
         Sheep.Agent.ResetPath();
-      
-        sheep.FoundWater = true;
-        Destination = ClosestWater.transform.position;
-
-        sheep.Agent.SetDestination(Destination);
     }
 
     public override void OnUpdate() {
@@ -33,7 +23,6 @@ public class Drinking : Action {
             // If we've drank enough to zero our thirst
             if (Sheep.Thirst.AttributeSatisfied()) {
                 Sheep.FoundWater = false;
-                ClosestWater = null; // probably don't need this
                 Sheep.OnActionEnd();
             }
         }
