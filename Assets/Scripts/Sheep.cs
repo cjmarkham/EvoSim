@@ -46,8 +46,8 @@ public class Sheep : MonoBehaviour {
         Movement = GetComponent<Movement>();
         ActionQueue = GetComponent<Queue>();
 
-        Hunger = new Attribute(0.5f, HungerAdditionPerFrame, MaxHungerTolerence);
-        Thirst = new Attribute(0.5f, ThirstAdditionPerFrame, MaxThirstTolerence);
+        Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
+        Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
 
         Transform stats = transform.Find("Stats");
         hungerProgress = stats.Find("Hunger Bar").gameObject.GetComponentInChildren<ProgressBar>();
