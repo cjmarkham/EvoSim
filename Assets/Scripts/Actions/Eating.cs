@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class Eating : Action {
-    public override int Priority => 50;
+    public override int Priority => 75;
 
     public override Actions Type => Actions.Eating;
 
