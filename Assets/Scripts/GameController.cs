@@ -9,11 +9,13 @@ public class GameController : MonoBehaviour {
     private Text sheepCountText;
     private Text TimerText;
 
-    private float time = Time.deltaTime;
+    private float time = 0f;
 
     private void Start() {
         sheepCountText = GameObject.Find("Sheep Count").GetComponent<Text>();
         TimerText = GameObject.Find("Timer").GetComponent<Text>();
+
+        time = Time.deltaTime;
     }
 
     private void Update() {
@@ -22,7 +24,7 @@ public class GameController : MonoBehaviour {
 
         time += Time.deltaTime;
 
-        TimerText.text = time.ToString();
+        TimerText.text = Mathf.Round(time).ToString();
     }
 
     public void SpawnSheep(Vector3 position) {

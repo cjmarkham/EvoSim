@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Sheep : MonoBehaviour {
     [HideInInspector]
@@ -199,5 +200,14 @@ public class Sheep : MonoBehaviour {
 
     private void Die() {
         Destroy(gameObject);
+
+        string time = GameObject.Find("Timer").GetComponent<Text>().text;
+        Debug.Log("Died at " + time + "seconds");
+        if (Hunger.DangerThresholdReached) {
+            Debug.Log("Cause of death: hunger");
+        }
+        if (Thirst.DangerThresholdReached) {
+            Debug.Log("Cause of death: thirst");
+        }
     }
 }
