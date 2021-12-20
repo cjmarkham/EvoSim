@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Sheep
+  - Eatable
+  - Terrain
   layers:
   - Default
   - TransparentFX

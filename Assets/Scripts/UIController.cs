@@ -3,6 +3,8 @@
 public class UIController : MonoBehaviour {
     private Sheep selectedSheep;
 
+    public GameController gameController;
+
     private void Start() {
     }
 
@@ -19,6 +21,11 @@ public class UIController : MonoBehaviour {
 
                     selectedSheep.transform.Find("Stats").gameObject.SetActive(true);
                 } else {
+
+                    if (hit.transform.gameObject.tag == "Terrain") {
+                        gameController.SpawnSheep(new Vector3(hit.point.x, 0, hit.point.z));
+                    }
+
                     selectedSheep = null;
 
                     // Remove the outline from every sheep (expensive?)

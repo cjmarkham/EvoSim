@@ -41,7 +41,7 @@ public class Sheep : MonoBehaviour {
         ActionQueue = GetComponent<Queue>();
 
         Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
-        Thirst = new Attribute(0.4f, ThirstAdditionPerFrame, MaxThirstTolerence);
+        Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
 
         Transform stats = transform.Find("Stats");
         hungerProgress = stats.Find("Hunger Bar").gameObject.GetComponentInChildren<ProgressBar>();
@@ -70,6 +70,10 @@ public class Sheep : MonoBehaviour {
 
         if (ActionQueue.CurrentAction != null) {
             ActionQueue.CurrentAction.OnFixedUpdate();
+        }
+
+        if (ShouldDie()) {
+            Die();
         }
     }
 
@@ -182,5 +186,18 @@ public class Sheep : MonoBehaviour {
     public void OnActionEnd() {
         Debug.Log("OnActionEnd - " + ActionQueue.CurrentAction.Type.ToString());
         ActionQueue.StartNextAction();
+    }
+
+    private bool ShouldDie() {
+        // TODO: These values are both 1
+        if (Hunger.DangerThresholdReached && Thirst.DangerThresholdReached) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Die() {
+        Destroy(gameObject);
     }
 }
