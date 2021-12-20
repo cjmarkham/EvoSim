@@ -33,6 +33,9 @@ public class Sheep : MonoBehaviour {
     public int ViewRadius = 10;
     public int MaxWanderDistance = 10;
     public bool OverrideNeeds = true;
+    public float HP = 40f;
+    public float MaxHP = 100f;
+    private float HPMultiplyFactor = 2f;
 
     private ProgressBar hungerProgress;
     private ProgressBar thirstProgress;
@@ -188,6 +191,8 @@ public class Sheep : MonoBehaviour {
 
         ThirstValue = Thirst.Value;
         ShouldDrink = Thirst.ShouldSatisfyAttribute();
+
+        UpdateHP();
     }
 
     public void OnActionEnd() {
@@ -195,13 +200,30 @@ public class Sheep : MonoBehaviour {
         ActionQueue.StartNextAction();
     }
 
-    private bool ShouldDie() {
-        // TODO: These values are both 1. Ideally, thirst should have a lower threshold
+    private void UpdateHP() {
         if (Hunger.DangerThresholdReached || Thirst.DangerThresholdReached) {
-            return true;
+            HP -= Time.deltaTime * HPMultiplyFactor;
+        } else {
+            // We're healthy so recover some HP
+            if (HP < MaxHP) {
+                HP += Time.deltaTime * HPMultiplyFactor;
+            }
         }
 
-        return false;
+        // Change sheep color depending on HP level
+        // Need ugly if statements until c# 9 is supported
+        Material material = gameObject.GetComponent<Renderer>().material;
+        if (HP <= 25f) {
+            material.color = Color.red;
+        } else if (HP <= 50f) {
+            material.color = Color.yellow;
+        } else {
+            material.color = Color.white;
+        }
+    }
+
+    private bool ShouldDie() {
+        return HP <= 0f;
     }
 
     private void Die() {
