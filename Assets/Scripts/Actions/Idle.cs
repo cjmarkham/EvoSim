@@ -16,7 +16,7 @@ public class Idle : Action {
     public override void OnStart(Sheep sheep) {
         Sheep = sheep;
         Sheep.Agent.ResetPath();
-        IdleTimer = Random.Range(0.5f, 1.5f);
+        IdleTimer = Random.Range(0.5f, 2.5f);
     }
 
     public override void OnUpdate() {
