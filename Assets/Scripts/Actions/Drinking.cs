@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class DrinkingAction : Action {
-    public override int Priority => 50;
+public class Drinking : Action {
+    public override int Priority => 75;
 
     public override Actions Type => Actions.Drinking;
 
@@ -9,23 +9,18 @@ public class DrinkingAction : Action {
 
     private Vector3 Destination;
 
-    private Transform ClosestDrinkingSpot;
+    private GameObject ClosestWater;
 
-    public DrinkingAction() {
+    public Drinking(GameObject closestWater) {
+        ClosestWater = closestWater;
     }
 
     public override void OnStart(Sheep sheep) {
         Sheep = sheep;
         Sheep.Agent.ResetPath();
-
-        ClosestDrinkingSpot = sheep.GetClosestDrinkingSpot();
-
-        if (ClosestDrinkingSpot == null) {
-            sheep.Movement.GetRandomDestination(sheep.MaxWanderDistance, out Destination);
-        } else {
-            sheep.FoundWater = true;
-            Destination = ClosestDrinkingSpot.position;
-        }
+      
+        sheep.FoundWater = true;
+        Destination = ClosestWater.transform.position;
 
         sheep.Agent.SetDestination(Destination);
     }
@@ -36,12 +31,16 @@ public class DrinkingAction : Action {
             Sheep.Agent.ResetPath();
 
             // If we've drank enough to zero our thirst
-            if (!Sheep.Thirst.ThresholdReached) {
+            if (Sheep.Thirst.AttributeSatisfied()) {
                 Sheep.FoundWater = false;
-                ClosestDrinkingSpot = null;
+                ClosestWater = null; // probably don't need this
                 Sheep.OnActionEnd();
             }
         }
+    }
+
+    public override void OnFixedUpdate() {
+
     }
 
     public override void OnEnd() {

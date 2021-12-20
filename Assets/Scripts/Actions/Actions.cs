@@ -3,5 +3,9 @@ public enum Actions {
     Eating,
     Idle,
     Resting,
-    Wandering
+    Wandering,
+    Mating,
+    FindingFood,
+    FindingWater,
+    FindingMate
 }

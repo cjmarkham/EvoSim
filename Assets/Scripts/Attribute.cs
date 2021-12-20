@@ -10,52 +10,58 @@ public class Attribute : ScriptableObject {
         }
     }
 
-    private readonly int DangerThreshold;
+    // The max limit before the animal starts losing HP (not implemented)
+    private readonly float DangerThreshold;
+
+    // Whether or not the danger threshold has been reached
+    public bool DangerThresholdReached = false;
 
     // The amount to increment or decrement in each update call
     private readonly float ModifyAmount;
 
-    private bool Incrementing = true;
     private bool Decrementing = false;
 
-    // Defines whether or not the upper limit has been reached. For example
-    // if ThresholdReached = true then we're hungry and should find food
-    public bool ThresholdReached = false;
-
-    public Attribute(float startValue, float modifyAmount, int dangerThreshold) {
+    public Attribute(float startValue, float modifyAmount, float dangerThreshold) {
         value = startValue;
         ModifyAmount = modifyAmount;
         DangerThreshold = dangerThreshold;
     }
 
     public void Increment() {
-        if (Decrementing) {
-            return;
-        }
-
         if(Value >= DangerThreshold) {
-            ThresholdReached = true;
+            DangerThresholdReached = true;
             return;
         }
 
-        Incrementing = true;
         value += Time.deltaTime * ModifyAmount;
     }
 
     public void Decrement() {
-        if (!ThresholdReached) {
-            if (Incrementing) {
-                return;
-            }
-        }
-
         Decrementing = true;
+
         // Decrement faster than increment so we don't drink or eat for ages
         value -= Time.deltaTime * (ModifyAmount * 10);
 
         if (Value <= 0f) {
-            ThresholdReached = false;
-            Incrementing = true;
+            DangerThresholdReached = false;
+            Decrementing = false;
         }
+    }
+
+    public bool ShouldSatisfyAttribute() {
+        // If we're decrementing then we're already satisfying our attribute
+        if (Decrementing) {
+            return false;
+        }
+
+        if (value > (DangerThreshold / 2)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool AttributeSatisfied() {
+        return value <= 0f;
     }
 }

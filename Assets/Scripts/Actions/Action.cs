@@ -15,5 +15,6 @@ public abstract class Action : ScriptableObject {
 
     public abstract void OnStart(Sheep sheep);
     public abstract void OnUpdate();
+    public abstract void OnFixedUpdate();
     public abstract void OnEnd();
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class WanderingAction : Action {
+public class Wandering : Action {
     public override int Priority => 1;
 
     public override Actions Type => Actions.Wandering;
@@ -9,7 +9,7 @@ public class WanderingAction : Action {
 
     private Vector3 Destination;
 
-    public WanderingAction() {
+    public Wandering() {
     }
 
     public override void OnStart(Sheep sheep) {
@@ -24,6 +24,11 @@ public class WanderingAction : Action {
         }
     }
 
+    public override void OnFixedUpdate() {
+
+    }
+
     public override void OnEnd() {
+
     }
 }

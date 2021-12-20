@@ -43,4 +43,8 @@ public class GameController : MonoBehaviour {
 
         Instantiate(Grass, new Vector3(randomX, 0.87f, randomZ), Quaternion.Euler(0, 0, 0));
     }
+
+    public void SetSpeed(int scale) {
+        Time.timeScale = scale;
+    }
 }

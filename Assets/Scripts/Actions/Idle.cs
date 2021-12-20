@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class IdleAction : Action {
+public class Idle : Action {
     public override int Priority => 1;
 
     public override Actions Type => Actions.Idle;
@@ -10,7 +10,7 @@ public class IdleAction : Action {
     // The amount of time we will be idle for
     private float IdleTimer;
 
-    public IdleAction() {
+    public Idle() {
     }
 
     public override void OnStart(Sheep sheep) {
@@ -25,6 +25,10 @@ public class IdleAction : Action {
         if (IdleTimer <= 0f) {
             Sheep.OnActionEnd();
         }
+    }
+
+    public override void OnFixedUpdate() {
+
     }
 
     public override void OnEnd() {

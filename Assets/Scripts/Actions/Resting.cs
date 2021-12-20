@@ -1,11 +1,13 @@
-﻿public class RestAction : Action {
+﻿using UnityEngine;
+
+public class Resting : Action {
     public override int Priority => 30;
 
     public override Actions Type => Actions.Resting;
 
     private Sheep Sheep;
 
-    public RestAction() {
+    public Resting() {
     }
 
     public override void OnStart(Sheep sheep) {
@@ -14,13 +16,11 @@
     }
 
     public override void OnUpdate() {
-        if (!Sheep.Agent.pathPending && Sheep.Agent.remainingDistance <= 0.1f) {
-            Sheep.Tiredness.Decrement();
+        
+    }
 
-            if (!Sheep.Tiredness.ThresholdReached) {
-                Sheep.OnActionEnd();
-            }
-        }
+    public override void OnFixedUpdate() {
+
     }
 
     public override void OnEnd() {

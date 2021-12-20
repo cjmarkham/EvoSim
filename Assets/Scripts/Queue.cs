@@ -56,6 +56,7 @@ public class Queue : MonoBehaviour {
     public void StartNextAction() {
         CurrentAction = Pop();
         CurrentAction.OnStart(Sheep);
+        Debug.Log("Starting Action " + CurrentAction.Type.ToString());
     }
 
     public void ResetCurrent() {
