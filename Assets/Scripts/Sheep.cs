@@ -190,7 +190,7 @@ public class Sheep : MonoBehaviour {
     }
 
     private bool ShouldDie() {
-        // TODO: These values are both 1
+        // TODO: These values are both 1. Ideally, thirst should have a lower threshold
         if (Hunger.DangerThresholdReached || Thirst.DangerThresholdReached) {
             return true;
         }

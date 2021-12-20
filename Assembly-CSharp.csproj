@@ -71,7 +71,6 @@
     <Compile Include="Assets/Scripts/Actions/Wandering.cs" />
     <Compile Include="Assets/Scripts/Actions/Eating.cs" />
     <Compile Include="Assets/Scripts/Actions/Drinking.cs" />
-    <Compile Include="Assets/Scripts/Actions/Resting.cs" />
     <Compile Include="Assets/Scripts/Actions/FindingFood.cs" />
     <Compile Include="Assets/Scripts/Actions/FindingWater.cs" />
   </ItemGroup>
