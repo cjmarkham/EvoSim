@@ -19,6 +19,13 @@ public class Eating : Action {
     }
 
     public override void OnUpdate() {
+        if (ClosestFood == null) {
+            // can happen when another sheep sniped our food
+            Sheep.FoundFood = false;
+            Sheep.OnActionEnd();
+            return;
+        }
+
         Eatable component = ClosestFood.GetComponent<Eatable>();
         Sheep.Hunger.Decrement();
         Sheep.Agent.ResetPath();
