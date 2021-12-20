@@ -56,14 +56,6 @@
     <Analyzer Include="/Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/MonoDevelop.Unity/Analyzers/Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets/OutlineEffect/OutlineEffect/LinkedSet.cs" />
-    <Compile Include="Assets/OutlineEffect/OutlineEffect/Outline.cs" />
-    <Compile Include="Assets/OutlineEffect/OutlineEffect/OutlineEffect.cs" />
-  </ItemGroup>
-  <ItemGroup>
-     <None Include="Assets/OutlineEffect/OutlineEffect/Resources/OutlineBufferShader.shader" />
-     <None Include="Assets/OutlineEffect/OutlineEffect.asmdef" />
-     <None Include="Assets/OutlineEffect/OutlineEffect/Resources/OutlineShader.shader" />
     <Reference Include="UnityEngine">
       <HintPath>/Applications/Unity/Hub/Editor/2020.3.0f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

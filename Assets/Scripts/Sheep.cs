@@ -39,6 +39,7 @@ public class Sheep : MonoBehaviour {
 
     private ProgressBar hungerProgress;
     private ProgressBar thirstProgress;
+    private ProgressBar hpProgress;
 
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
@@ -51,6 +52,7 @@ public class Sheep : MonoBehaviour {
         Transform stats = transform.Find("Stats");
         hungerProgress = stats.Find("Hunger Bar").gameObject.GetComponentInChildren<ProgressBar>();
         thirstProgress = stats.Find("Thirst Bar").gameObject.GetComponentInChildren<ProgressBar>();
+        hpProgress = stats.Find("HP Bar").gameObject.GetComponentInChildren<ProgressBar>();
     }
 
     private void FixedUpdate() {
@@ -184,6 +186,7 @@ public class Sheep : MonoBehaviour {
         // UI
         hungerProgress.current = Hunger.Value;
         thirstProgress.current = Thirst.Value;
+        hpProgress.current = HP / 100f;
 
         // Debug
         HungerValue = Hunger.Value;
