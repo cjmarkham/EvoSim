@@ -61,8 +61,6 @@ public class Sheep : MonoBehaviour {
     public GameObject Poop;
     public Gender gender;
 
-    
-
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
         Movement = GetComponent<Movement>();
@@ -74,7 +72,7 @@ public class Sheep : MonoBehaviour {
 
         // TODO: Remove this once debugging done
         if (gender == Gender.Male) {
-            ReproductiveUrge = new Attribute(0f, UrgeIncrementPerFrame, UrgeDecrementPerFrame, 2f);
+            ReproductiveUrge = new Attribute(.98f, UrgeIncrementPerFrame, UrgeDecrementPerFrame, 2f);
         } else {
             ReproductiveUrge = new Attribute(0f, 0f, 0f, 2f);
         }

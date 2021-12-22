@@ -89,12 +89,12 @@ public class FindingMate : Action {
             }
 
             // Can't allow this, sorry
-            if (Sheep.Father != null && possibleMate == Sheep.Father) {
+            if (Sheep.Father != null && possibleMateComponent == Sheep.Father) {
                 continue;
             }
 
             // Can't allow this, sorry
-            if (Sheep.Mother != null && possibleMate == Sheep.Mother) {
+            if (Sheep.Mother != null && possibleMateComponent == Sheep.Mother) {
                 continue;
             }
 
