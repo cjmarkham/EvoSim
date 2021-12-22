@@ -12,16 +12,17 @@ public class Sheep : MonoBehaviour {
     public Queue ActionQueue;
     
 
-    [Header("Hunger")]
     public Attribute Hunger;
+    [Header("Hunger")]
     public float HungerValue = 0f;
     public bool ShouldEat = false;
     public bool FoundFood = false;
     private float HungerAdditionPerFrame = 0.01f;
     private float MaxHungerTolerence = 1f; // The max amount of hunger before dying
 
-    [Header("Thirst")]
+    [HideInInspector]
     public Attribute Thirst;
+    [Header("Thirst")]
     public float ThirstValue = 0f;
     public bool ShouldDrink = false;
     public bool FoundWater = false;
@@ -31,7 +32,8 @@ public class Sheep : MonoBehaviour {
     [Header("Settings")]
     public int ViewRadius = 10;
     public int MaxWanderDistance = 10;
-    public bool OverrideNeeds = true;
+    public bool OverrideNeeds = false;
+    public bool OverrideWalking = false;
     public float HP = 40f;
     public float MaxHP = 100f;
     private float HPMultiplyFactor = 2f;
@@ -46,7 +48,7 @@ public class Sheep : MonoBehaviour {
 
         ActionQueue = new Queue(this);
 
-        Hunger = new Attribute(0f, HungerAdditionPerFrame, MaxHungerTolerence);
+        Hunger = new Attribute(0.47f, HungerAdditionPerFrame, MaxHungerTolerence);
         Thirst = new Attribute(0f, ThirstAdditionPerFrame, MaxThirstTolerence);
 
         Transform stats = transform.Find("Stats");
@@ -57,15 +59,15 @@ public class Sheep : MonoBehaviour {
 
     private void FixedUpdate() {
         // Always make sure we have a next action
-        if (ActionQueue.Length() < 5) {
+        if (ActionQueue.Length() < 5 && !OverrideWalking) {
             // Choose either to graze or wander randomly
             int rand = Random.Range(0, 2);
             if (rand > 0) {
-                Action wanderingAction = ScriptableObject.CreateInstance<Wandering>();
+                Action wanderingAction = new Wandering();
                 ActionQueue.Add(wanderingAction);
             }
             else {
-                Action idleAction = ScriptableObject.CreateInstance<Idle>();
+                Action idleAction = new Idle();
                 ActionQueue.Add(idleAction);
             }
         }
@@ -157,7 +159,7 @@ public class Sheep : MonoBehaviour {
             // The eating action is added to the list so we need to cancel this one.
             Action nextAction = ActionQueue.First();
             if (nextAction.Priority > ActionQueue.CurrentAction.Priority) {
-                Debug.Log("Ending " + ActionQueue.CurrentAction.Type.ToString() + " as " + nextAction.Type.ToString() + " has higher priority");
+                //Debug.Log("Ending " + ActionQueue.CurrentAction.Type.ToString() + " as " + nextAction.Type.ToString() + " has higher priority");
                 OnActionEnd();
             }
         }
@@ -174,12 +176,12 @@ public class Sheep : MonoBehaviour {
         }
 
         // We only get hungry if we're not currently eating
-        if (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type != Actions.Eating) {
+        if (ActionQueue.CurrentAction == null || (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type != Actions.Eating)) {
             Hunger.Increment();
         }
 
         // We only get thirsty if we're not currently drinking
-        if (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type != Actions.Drinking) {
+        if (ActionQueue.CurrentAction == null || (ActionQueue.CurrentAction != null && ActionQueue.CurrentAction.Type != Actions.Drinking)) {
             Thirst.Increment();
         }
 
@@ -199,8 +201,15 @@ public class Sheep : MonoBehaviour {
     }
 
     public void OnActionEnd() {
-        Debug.Log("OnActionEnd - " + ActionQueue.CurrentAction.Type.ToString());
-        ActionQueue.StartNextAction();
+        //Debug.Log("OnActionEnd - " + ActionQueue.CurrentAction.Type.ToString());
+
+        // Only start a new action if there is one
+        if (ActionQueue.Length() > 0) {
+            ActionQueue.StartNextAction();
+        } else {
+            // If there's no more actions to do, we still want to remove the current action once done
+            ActionQueue.ResetCurrent();
+        }
     }
 
     private void UpdateHP() {

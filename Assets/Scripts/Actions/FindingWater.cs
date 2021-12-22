@@ -24,7 +24,7 @@ public class FindingWater : Action {
             sheep.Movement.GetRandomDestination(sheep.MaxWanderDistance, out Destination);
         }
         else {
-            Debug.Log("Found water");
+            //Debug.Log("Found water");
             sheep.FoundWater = true;
             Destination = ClosestWater.transform.position;
 
@@ -60,7 +60,6 @@ public class FindingWater : Action {
         Sheep.OnActionEnd();
     }
 
-    // TODO: Sometimes this doesn't get the closest water
     private GameObject GetClosestWater() {
         LayerMask mask = LayerMask.GetMask("DrinkSpot");
         Collider[] collisions = Physics.OverlapSphere(Sheep.transform.position, Sheep.ViewRadius, mask);
@@ -70,13 +69,13 @@ public class FindingWater : Action {
             return null;
         }
 
-        float closestDistance = Vector2.Distance(collisions[0].transform.position, Sheep.transform.position);
-        GameObject closestWater = collisions[0].gameObject;
+        float closestDistance = Mathf.Infinity;
+        GameObject closestWater = null;
 
         foreach (Collider c in collisions) {
             GameObject water = c.gameObject;
 
-            float distance = Vector2.Distance(c.transform.position, Sheep.transform.position);
+            float distance = Vector3.Distance(c.transform.position, Sheep.transform.position);
 
             if (distance < closestDistance) {
                 closestDistance = distance;

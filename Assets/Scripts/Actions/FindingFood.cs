@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class FindingFood : Action {
-    public override int Priority => 50;
+    public override int Priority => 75;
 
     public override Actions Type => Actions.FindingFood;
 
@@ -23,7 +23,7 @@ public class FindingFood : Action {
         if (ClosestFood == null) {
             sheep.Movement.GetRandomDestination(sheep.MaxWanderDistance, out Destination);
         } else {
-            Debug.Log("Found food");
+            //Debug.Log("Found food");
             sheep.FoundFood = true;
             Destination = ClosestFood.transform.position;
 
@@ -67,7 +67,6 @@ public class FindingFood : Action {
         Sheep.OnActionEnd();
     }
 
-    // TODO: Sometimes, this doesn't actually get the closest food
     private GameObject GetClosestFood() {
         LayerMask mask = LayerMask.GetMask("Food");
         Collider[] collisions = Physics.OverlapSphere(Sheep.transform.position, Sheep.ViewRadius, mask);
@@ -77,8 +76,8 @@ public class FindingFood : Action {
             return null;
         }
 
-        float closestDistance = Vector2.Distance(collisions[0].transform.position, Sheep.transform.position);
-        GameObject closestFood = collisions[0].gameObject;
+        float closestDistance = Mathf.Infinity;
+        GameObject closestFood = null;
 
         foreach (Collider c in collisions) {
             GameObject food = c.gameObject;
@@ -92,7 +91,9 @@ public class FindingFood : Action {
                 continue;
             }
 
-            float distance = Vector2.Distance(c.transform.position, Sheep.transform.position);
+            float distance = Vector3.Distance(c.transform.position, Sheep.transform.position);
+
+            Debug.Log(c.gameObject.name + " - " + distance);
 
             if (distance < closestDistance) {
                 closestDistance = distance;

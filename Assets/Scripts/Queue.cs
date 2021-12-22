@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Queue : MonoBehaviour {
+public class Queue : ScriptableObject {
     public List<Action> ActionQueue;
 
     public Action CurrentAction;
