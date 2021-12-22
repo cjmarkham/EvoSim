@@ -6,6 +6,8 @@ public class Queue : ScriptableObject {
 
     public Action CurrentAction;
 
+    private bool isPaused = false;
+
     private Sheep Sheep;
 
     public Queue(Sheep sheep) {
@@ -15,6 +17,14 @@ public class Queue : ScriptableObject {
 
     public bool Empty() {
         return ActionQueue.Count == 0;
+    }
+
+    public void Pause(bool pauseOrUnpause) {
+        isPaused = pauseOrUnpause;
+    }
+
+    public bool Paused() {
+        return isPaused;
     }
 
     public bool HasItem(Actions actionType) {

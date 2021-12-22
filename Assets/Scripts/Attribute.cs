@@ -17,13 +17,15 @@ public class Attribute : ScriptableObject {
     public bool DangerThresholdReached = false;
 
     // The amount to increment or decrement in each update call
-    private readonly float ModifyAmount;
+    private readonly float IncrementAmount;
+    private readonly float DecrementAmount;
 
     private bool Decrementing = false;
 
-    public Attribute(float startValue, float modifyAmount, float dangerThreshold) {
+    public Attribute(float startValue, float increment, float decrement, float dangerThreshold) {
         value = startValue;
-        ModifyAmount = modifyAmount;
+        IncrementAmount = increment;
+        DecrementAmount = decrement;
         DangerThreshold = dangerThreshold;
     }
 
@@ -33,14 +35,13 @@ public class Attribute : ScriptableObject {
             return;
         }
 
-        value += Time.deltaTime * ModifyAmount;
+        value += Time.deltaTime * IncrementAmount;
     }
 
     public void Decrement() {
         Decrementing = true;
 
-        // Decrement faster than increment so we don't drink or eat for ages
-        value -= Time.deltaTime * (ModifyAmount * 10);
+        value -= Time.deltaTime * DecrementAmount;
 
         if (Value <= 0f) {
             DangerThresholdReached = false;
