@@ -42,6 +42,8 @@ public class Sheep : MonoBehaviour {
     private ProgressBar thirstProgress;
     private ProgressBar hpProgress;
 
+    public GameObject Poop;
+
     private void Start() {
         Agent = GetComponent<NavMeshAgent>();
         Movement = GetComponent<Movement>();
@@ -201,7 +203,12 @@ public class Sheep : MonoBehaviour {
     }
 
     public void OnActionEnd() {
-        //Debug.Log("OnActionEnd - " + ActionQueue.CurrentAction.Type.ToString());
+        // If we've just finished eating, spawn a poop
+        if (ActionQueue.CurrentAction.Type == Actions.Eating) {
+            Vector3 poopPosition = new Vector3(transform.position.x, 0.9f, transform.position.z);
+            // TODO: Fix rotation in blender
+            Instantiate(Poop, poopPosition, Quaternion.Euler(-90f, 0, 0));
+        }
 
         // Only start a new action if there is one
         if (ActionQueue.Length() > 0) {

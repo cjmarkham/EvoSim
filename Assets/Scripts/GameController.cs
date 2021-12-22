@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
     public GameObject Sheep;
-    public GameObject Grass;
     private int totalSheep;
 
     private Text sheepCountText;
@@ -29,18 +28,6 @@ public class GameController : MonoBehaviour {
 
     public void SpawnSheep(Vector3 position) {
         Instantiate(Sheep, position, Quaternion.Euler(0, 0, 0));
-    }
-
-    public void SpawnGrass() {
-        float maxX = 30f;
-        float minX = 0f;
-        float maxZ = 11f;
-        float minZ = 0f;
-
-        float randomX = Random.Range(minX, maxX);
-        float randomZ = Random.Range(minZ, maxZ);
-
-        Instantiate(Grass, new Vector3(randomX, 0.87f, randomZ), Quaternion.Euler(0, 0, 0));
     }
 
     public void SetSpeed(int scale) {

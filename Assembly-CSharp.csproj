@@ -73,6 +73,7 @@
     <Compile Include="Assets/Scripts/Actions/Drinking.cs" />
     <Compile Include="Assets/Scripts/Actions/FindingFood.cs" />
     <Compile Include="Assets/Scripts/Actions/FindingWater.cs" />
+    <Compile Include="Assets/Scripts/Poop.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

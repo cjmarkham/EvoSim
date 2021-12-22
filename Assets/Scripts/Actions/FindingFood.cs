@@ -50,10 +50,6 @@ public class FindingFood : Action {
         if (ClosestFood == null) {
             ClosestFood = GetClosestFood();
         }
-
-        if (ClosestFood != null) {
-            ClosestFood.GetComponent<Renderer>().material.color = Color.red;
-        }
     }
 
     public override void OnEnd() {
@@ -82,8 +78,6 @@ public class FindingFood : Action {
         foreach (Collider c in collisions) {
             GameObject food = c.gameObject;
 
-            food.GetComponent<Renderer>().material.color = Color.blue;
-
             Eatable component = food.GetComponent<Eatable>();
 
             // If this food is being targeted by another sheep, ignore it
@@ -92,8 +86,6 @@ public class FindingFood : Action {
             }
 
             float distance = Vector3.Distance(c.transform.position, Sheep.transform.position);
-
-            Debug.Log(c.gameObject.name + " - " + distance);
 
             if (distance < closestDistance) {
                 closestDistance = distance;
