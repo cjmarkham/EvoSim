@@ -72,7 +72,7 @@ public class Sheep : MonoBehaviour {
 
         // TODO: Remove this once debugging done
         if (gender == Gender.Male) {
-            ReproductiveUrge = new Attribute(.98f, UrgeIncrementPerFrame, UrgeDecrementPerFrame, 2f);
+            ReproductiveUrge = new Attribute(0f, UrgeIncrementPerFrame, UrgeDecrementPerFrame, 2f);
         } else {
             ReproductiveUrge = new Attribute(0f, 0f, 0f, 2f);
         }
@@ -206,10 +206,6 @@ public class Sheep : MonoBehaviour {
             return;
         }
 
-        if (ActionQueue.Paused()) {
-            return;
-        }
-
         if (ActionQueue.CurrentAction != null) {
             // If the next action in the sorted list has a higher priority than the current action
             // then we cancel this action and pick the next one.
@@ -220,6 +216,10 @@ public class Sheep : MonoBehaviour {
                 Debug.Log("Ending " + ActionQueue.CurrentAction.Type.ToString() + " as " + nextAction.Type.ToString() + " has higher priority");
                 OnActionEnd();
             }
+        }
+
+        if (ActionQueue.Paused()) {
+            return;
         }
 
         // We only start the next action if no current action
