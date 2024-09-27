@@ -90,7 +90,6 @@ public class FindingFood : Action {
             if (distance < closestDistance) {
                 closestDistance = distance;
                 closestFood = food;
-                component.Targeted = true;
             }
         }
 

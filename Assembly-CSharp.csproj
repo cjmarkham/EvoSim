@@ -57,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Scripts/Eatable.cs" />
-    <Compile Include="Assets/Scripts/Actions/Actions.cs" />
     <Compile Include="Assets/Scripts/GameController.cs" />
     <Compile Include="Assets/Scripts/Movement.cs" />
     <Compile Include="Assets/Scripts/Attribute.cs" />
@@ -74,6 +73,10 @@
     <Compile Include="Assets/Scripts/Actions/FindingFood.cs" />
     <Compile Include="Assets/Scripts/Actions/FindingWater.cs" />
     <Compile Include="Assets/Scripts/Poop.cs" />
+    <Compile Include="Assets/Scripts/Actions/Mating.cs" />
+    <Compile Include="Assets/Scripts/Actions/FindingMate.cs" />
+    <Compile Include="Assets/Scripts/DataTypes/Genders.cs" />
+    <Compile Include="Assets/Scripts/DataTypes/Actions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
